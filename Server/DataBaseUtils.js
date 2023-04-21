@@ -1,4 +1,8 @@
 import {Op, DataTypes, Sequelize} from "sequelize";
+import {MessagesT} from './Models/Messages.js';
+import {ClientsT} from './Models/Clients.js';
+import {ChatsT} from './Models/Chats.js';
+
 
 export class DataBaseUtils {
     static authentication(
@@ -30,17 +34,6 @@ export class DataBaseUtils {
     }
 
     async findUserById(id = -1) {
-        let ClientsT = this.SequelizedDatabase.define("clients",
-            {
-                id: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false,
-                    primaryKey: true
-                }
-            }, {
-                timestamps: false
-            });
-
         await this.SequelizedDatabase.sync().catch((error) => {
             console.error('Unable to create table : ', error);
         });
@@ -55,33 +48,6 @@ export class DataBaseUtils {
     }
 
     async findAllLastMessagesFromChatArray(ChatArray) {
-        let MessagesT = this.SequelizedDatabase.define("messages",
-            {
-                id: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false,
-                    primaryKey: true
-                },
-                ChatId: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false
-                },
-                AuthorId: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false
-                },
-                CreateDateTime: {
-                    type: DataTypes.DATE,
-                    allowNull: false
-                },
-                MessageTxt:{
-                    type: DataTypes.TEXT,
-                    allowNull: false
-                }
-            },
-            {
-                timestamps: false
-            });
         await this.SequelizedDatabase.sync().catch((error) => {
             console.error('Unable to create table : ', error);
         });
@@ -100,25 +66,6 @@ export class DataBaseUtils {
     }
 
     async findChatsByUserId(id = -1, limitedNumberOfRecords = -1) {
-        let ChatsT = this.SequelizedDatabase.define("chats",
-            {
-                id: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false,
-                    primaryKey: true
-                },
-                Owner1Id: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false
-                },
-                Owner2Id: {
-                    type: DataTypes.BIGINT,
-                    allowNull: false
-                }
-            }, {
-                timestamps: false
-            });
-
         return ChatsT.findAll({
             where: {
                 [Op.or]: [
@@ -133,47 +80,20 @@ export class DataBaseUtils {
 
     }
 
-    async findAllMessagesByChatId(id = -1, limitedNumberOfRecords = -1){
-       let MessagesT = this.SequelizedDatabase.define("messages",
-            {
-                id:{
-                    type: DataTypes.BIGINT,
-                    allowNull: false,
-                    primaryKey: true
-                },
-                ChatId:{
-                    type: DataTypes.BIGINT,
-                    allowNull: false
-                },
-                AuthorId:{
-                    type: DataTypes.BIGINT,
-                    allowNull: false
-                },
-                CreateDateTime:{
-                    type: DataTypes.DATE,
-                    allowNull: false
-                },
-                MessageTxt:{
-                    type: DataTypes.TEXT,
-                    allowNull: false
-                }
+    async findAllMessagesByChatId(id = -1, limitedNumberOfRecords = -1) {
+        return MessagesT.findAll({
+            where: {
+                ChatId: id
             },
-           {
-               timestamps: false
-           });
-
-       return MessagesT.findAll({
-           where:{
-               ChatId : id
-           },
-           limit: ((limitedNumberOfRecords < 0) ? this.SequelizedDatabase.query.limit : limitedNumberOfRecords),
-           order: [
-            ['CreateDateTime', 'DESC']
-        ]
-       });
+            limit: ((limitedNumberOfRecords < 0) ? this.SequelizedDatabase.query.limit : limitedNumberOfRecords),
+            order: [
+                ['CreateDateTime', 'DESC']
+            ]
+        });
     }
 }
 
+////////////////////////////////////////Some db tests///////////////////////////////////////////////////////////////////
 let DBtest = new DataBaseUtils();
 let currentUserId = 3;
 let user = await DBtest.findUserById(currentUserId).then((result) => {
@@ -198,7 +118,7 @@ for (let i = 0; i < lastMessagesByChatIds.length; ++i) {
     ChatIdArray.push(lastMessagesByChatIds[i].id);
 }
 
-for(let i = 0; i < lastMessagesByChatIds.length; ++i){
+for (let i = 0; i < lastMessagesByChatIds.length; ++i) {
     console.log(lastMessagesByChatIds[i].MessageTxt);
 }
 
@@ -206,6 +126,7 @@ let MessagesForChat = await DBtest.findAllMessagesByChatId(ChatIdArray[0]).then(
     return result;
 });
 
-for(let i = 0; i < MessagesForChat.length; ++i){
+for (let i = 0; i < MessagesForChat.length; ++i) {
     console.log(`Message${i}: ${MessagesForChat[i].MessageTxt}`);
 }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
