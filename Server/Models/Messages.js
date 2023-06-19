@@ -1,29 +1,34 @@
-import {DataTypes} from "sequelize";
+import {DataTypes, Sequelize} from "sequelize";
+import {DataBaseUtils} from "../DataBaseUtils.js";
 
-export let MessagesT = this.SequelizedDatabase.define("messages",
-    {
-        id: {
-            type: DataTypes.BIGINT,
-            allowNull: false,
-            primaryKey: true
+export default function getMessagesT(dataBaseUtils){
+    return dataBaseUtils.define("messages",
+        {
+            id: {
+                type: DataTypes.BIGINT,
+                allowNull: false,
+                primaryKey: true
+            },
+            ChatId: {
+                type: DataTypes.BIGINT,
+                allowNull: false
+            },
+            AuthorId: {
+                type: DataTypes.BIGINT,
+                allowNull: false
+            },
+            CreateDateTime: {
+                type: DataTypes.DATE,
+                allowNull: false
+            },
+            MessageTxt: {
+                type: DataTypes.TEXT,
+                allowNull: false
+            }
         },
-        ChatId: {
-            type: DataTypes.BIGINT,
-            allowNull: false
-        },
-        AuthorId: {
-            type: DataTypes.BIGINT,
-            allowNull: false
-        },
-        CreateDateTime: {
-            type: DataTypes.DATE,
-            allowNull: false
-        },
-        MessageTxt: {
-            type: DataTypes.TEXT,
-            allowNull: false
-        }
-    },
-    {
-        timestamps: false
-    });
+        {
+            timestamps: false
+        });
+}
+
+//exports.default = getMessagesT;

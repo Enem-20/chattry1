@@ -1,7 +1,7 @@
 import {Op, DataTypes, Sequelize} from "sequelize";
-import {MessagesT} from './Models/Messages.js';
-import {ClientsT} from './Models/Clients.js';
-import {ChatsT} from './Models/Chats.js';
+import getMessagesT from './Models/Messages.js';
+import getClientsT from './Models/Clients.js';
+import getChatsT from './Models/Chats.js';
 
 
 export class DataBaseUtils {
@@ -33,12 +33,16 @@ export class DataBaseUtils {
         this.SequelizedDatabase = DataBaseUtils.authentication();
     }
 
+    get sequelizedDatabase(){
+        return this.SequelizedDatabase;
+    }
+
     async findUserById(id = -1) {
         await this.SequelizedDatabase.sync().catch((error) => {
             console.error('Unable to create table : ', error);
         });
 
-        return ClientsT.findOne({
+        return getClientsT(this.SequelizedDatabase).findOne({
             where: {
                 id: id
             }
@@ -53,7 +57,7 @@ export class DataBaseUtils {
         });
         let lastMessagesArray = [];
         for (let i = 0; i < ChatArray.length; ++i) {
-            lastMessagesArray.push(await MessagesT.findOne({
+            lastMessagesArray.push(await getMessagesT(this.SequelizedDatabase).findOne({
                 where: {
                     ChatId: ChatArray[i]
                 },
@@ -66,7 +70,7 @@ export class DataBaseUtils {
     }
 
     async findChatsByUserId(id = -1, limitedNumberOfRecords = -1) {
-        return ChatsT.findAll({
+        return getChatsT(this.SequelizedDatabase).findAll({
             where: {
                 [Op.or]: [
                     {Owner1Id: id},
@@ -81,7 +85,7 @@ export class DataBaseUtils {
     }
 
     async findAllMessagesByChatId(id = -1, limitedNumberOfRecords = -1) {
-        return MessagesT.findAll({
+        return getMessagesT(this.SequelizedDatabase).findAll({
             where: {
                 ChatId: id
             },
@@ -92,6 +96,8 @@ export class DataBaseUtils {
         });
     }
 }
+
+//module.exports = DataBaseUtils
 
 ////////////////////////////////////////Some db tests///////////////////////////////////////////////////////////////////
 let DBtest = new DataBaseUtils();

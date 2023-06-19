@@ -31,7 +31,7 @@ app.listen(expressPort, () => console.log(`Listening on ${expressPort}`))
 ////////////////////////////////WebSocket transferring//////////////////////////////////////////////////////////////////
 let wsPort = 443;
 const wss = new WebSocketServer({port: wsPort});
-const sequelize = DataBaseUtils.authentication();
+//const sequelize = DataBaseUtils.authentication();
 
 let clients = {}
 
