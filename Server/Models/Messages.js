@@ -22,7 +22,7 @@ export default function getMessagesT(dataBaseUtils){
                 allowNull: false
             },
             MessageTxt: {
-                type: DataTypes.TEXT,
+                type: DataTypes.STRING,
                 allowNull: false
             }
         },

@@ -66,6 +66,7 @@ export class DataBaseUtils {
                 ]
             }));
         }
+        
         return lastMessagesArray;
     }
 
@@ -101,7 +102,7 @@ export class DataBaseUtils {
 
 ////////////////////////////////////////Some db tests///////////////////////////////////////////////////////////////////
 let DBtest = new DataBaseUtils();
-let currentUserId = 3;
+let currentUserId = 2;
 let user = await DBtest.findUserById(currentUserId).then((result) => {
     return result;
 });

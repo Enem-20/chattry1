@@ -1,2 +1,2 @@
 INSERT INTO clients (id)
-VALUES (1), (2), (3)
+VALUES (0), (1), (2)

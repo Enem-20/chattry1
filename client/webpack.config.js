@@ -4,19 +4,19 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = {
     mode: "development",
     entry: "./src/index.js", // входная точка - исходный файл
-    // output:{
-    //     path: path.resolve(__dirname, "./public"),     // путь к каталогу выходных файлов - папка public
-    //     publicPath: "/public/",
-    //     filename: `bundle.js`       // название создаваемого файла
-    // },
-    devServer: {
-        historyApiFallback: true,
-        static: {
-            directory: path.join(__dirname, "/"),
-        },
-        port: 8081,
-        open: true
+    output:{
+        path: path.resolve(__dirname, "./dist"),     // путь к каталогу выходных файлов - папка public
+        publicPath: "./",
+        filename: `bundle.js`       // название создаваемого файла
     },
+    // devServer: {
+    //     historyApiFallback: true,
+    //     static: {
+    //         directory: path.join(__dirname, "/"),
+    //     },
+    //     port: 8081,
+    //     open: true
+    // },
     module:{
         rules:[   //загрузчик для jsx
             {
